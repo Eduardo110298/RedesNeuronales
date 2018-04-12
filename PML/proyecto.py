@@ -1,0 +1,3 @@
+Class Neurona(
+aksmda
+lasmldk	
