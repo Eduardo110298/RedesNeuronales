@@ -79,6 +79,36 @@ class NeuralNetwork():
 
         return self.__sigmoid_derivative(self.a[self.total_layers-3][k]) * layer1_ways_sum
 
+    def layer1_weight_deltas_calculus(self):
+        layer1_delta = list()
+        for k in range(0,self.n[self.total_layers-3]):
+            delta = int()
+            for j in range(0,self.n[self.total_layers-4]):
+                delta += self.a[self.total_layers-4][j] * self.__layer1_sigma(k)
+            layer1_delta.append(delta)
+
+        self.weight_deltas.append(layer1_delta)
+
+    def layer2_weight_deltas_calculus(self):
+        layer2_delta = list()
+        for k in range(0,self.n[self.total_layers-2]):
+            delta = int()
+            for j in range(0,self.n[self.total_layers-3]):
+                delta += self.a[self.total_layers-3][j] * self.__layer2_sigma(k)
+            layer2_delta.append(delta)
+
+        self.weight_deltas.append(layer2_delta)
+
+    def layer3_weight_deltas_calculus(self):
+        layer3_delta = list()
+        for i in range(0,self.n[self.total_layers-1]):
+            delta = int()
+            for j in range(0,self.n[self.total_layers-2]):
+                delta += self.a[self.total_layers-2][j] * self.__layer3_sigma(i)
+            layer3_delta.append(delta)
+
+        self.weight_deltas.append(layer3_delta)
+
 if __name__ == "__main__":
     # Uncomment this lines only during tests:
     
