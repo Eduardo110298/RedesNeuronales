@@ -70,12 +70,14 @@ class NeuralNetwork():
         for i in range(0,self.n[self.total_layers-1]):
             layer2_ways_sum += self.w[self.total_layers-2][i,k] * self.__layer3_sigma(i)
 
-        return self.__sigmoid_derivative(self.a[self.total_layers-2][k]) * ways_sum
+        return self.__sigmoid_derivative(self.a[self.total_layers-2][k]) * layer2_ways_sum
 
-    def __layer1_sigma(self,p):
+    def __layer1_sigma(self,k):
         layer1_ways_sum = int()
         for p in range(0,self.n[self.total_layers-2]):
-            layer1_ways_sum +=
+            layer1_ways_sum += self.w[self.total_layers-3][p,k] * self.__layer2_sigma(p)
+
+        return self.__sigmoid_derivative(self.a[self.total_layers-3][k]) * layer1_ways_sum
 
 if __name__ == "__main__":
     # Uncomment this lines only during tests:
