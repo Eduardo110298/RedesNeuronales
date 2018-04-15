@@ -37,6 +37,8 @@ class NeuralNetwork():
         self.n.append(len(input))
         self.n += [layer.n for layer in layers]
 
+        self.total_layers = len(layers)
+
     def __sigmoid(self, x):
         return 1 / (1 + exp(-x))
 
@@ -44,7 +46,7 @@ class NeuralNetwork():
         """
         Generate the output.
         """
-        for k in range(1,len(self.n)):
+        for k in range(1,self.total_layers):
             a = list()
             for i in range(0,self.n[k]):
                 x = int()
@@ -54,8 +56,29 @@ class NeuralNetwork():
                 a.append(self.__sigmoid(x))
             self.a.append(a)
 
+    def __sigmoid_derivative(x):
+        return x (1 - x)
+
+    def __error_derivative(expected,given):
+        return - (expected - given)
+
+    def __layer3_sigma(self,i):
+        return self.__sigmoid_derivative(self.a[self.total_layers-1][i]) * self.__error_derivative(self.output[i],self.a[self.total_layers-1][i])
+
+    def __layer2_sigma(self,k):
+        layer2_ways_sum = int()
+        for i in range(0,self.n[self.total_layers-1]):
+            layer2_ways_sum += self.w[self.total_layers-2][i,k] * self.__layer3_sigma(i)
+
+        return self.__sigmoid_derivative(self.a[self.total_layers-2][k]) * ways_sum
+
+    def __layer1_sigma(self,p):
+        layer1_ways_sum = int()
+        for p in range(0,self.n[self.total_layers-2]):
+            layer1_ways_sum +=
+
 if __name__ == "__main__":
-    # Uncomment this only during tests:
+    # Uncomment this lines only during tests:
     
     # layer1 = NeuralLayer(3,2)
     # output_layer = NeuralLayer(1,3)
@@ -63,7 +86,7 @@ if __name__ == "__main__":
     # neuralNetwork = NeuralNetwork([2,3],[layer1,output_layer],None,None)
     # neuralNetwork.think()
 
-    # print(neuralNetwork.a)
     # print(neuralNetwork.w)
     # print(neuralNetwork.u)
     # print(neuralNetwork.n)
+    # print(neuralNetwork.a)
