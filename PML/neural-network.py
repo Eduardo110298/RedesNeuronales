@@ -76,30 +76,36 @@ class NeuralNetwork():
     def layer1_weight_deltas_calculus(self):
         layer1_delta = list()
         for k in range(0,self.n[self.total_layers-3]):
-            delta = int()
+            deltas = list()
             for j in range(0,self.n[self.total_layers-4]):
-                delta += self.a[self.total_layers-4][j] * self.__layer1_sigma(k)
-            layer1_delta.append(delta)
+                delta = int()
+                delta = self.a[self.total_layers-4][j] * self.__layer1_sigma(k)
+                deltas.append(delta)
+            layer1_delta.append(deltas)
 
         self.weight_deltas.append(layer1_delta)
 
     def layer2_weight_deltas_calculus(self):
         layer2_delta = list()
         for k in range(0,self.n[self.total_layers-2]):
-            delta = int()
+            deltas = list()
             for j in range(0,self.n[self.total_layers-3]):
-                delta += self.a[self.total_layers-3][j] * self.__layer2_sigma(k)
-            layer2_delta.append(delta)
+                delta = int()
+                delta = self.a[self.total_layers-3][j] * self.__layer2_sigma(k)
+                deltas.append(delta)
+            layer2_delta.append(deltas)
 
         self.weight_deltas.append(layer2_delta)
 
     def layer3_weight_deltas_calculus(self):
         layer3_delta = list()
         for i in range(0,self.n[self.total_layers-1]):
-            delta = int()
+            deltas = list()
             for j in range(0,self.n[self.total_layers-2]):
-                delta += self.a[self.total_layers-2][j] * self.__layer3_sigma(i)
-            layer3_delta.append(delta)
+                delta = int()
+                delta = self.a[self.total_layers-2][j] * self.__layer3_sigma(i)
+                deltas.append(delta)
+            layer3_delta.append(deltas)
 
         self.weight_deltas.append(layer3_delta)
 
@@ -117,6 +123,42 @@ class NeuralNetwork():
         self.weight_deltas = array(self.weight_deltas)
         self.adjust_weights()
 
+    def layer1_threshold_deltas_calculus(self):
+        layer1_threshold = list()
+        for i in range(0,self.n[self.total_layers-3]):
+            delta = int()
+            delta = self.__layer1_sigma(i)
+            layer1_threshold.append(delta)
+        self.threshold_deltas.append(layer1_threshold)
+
+    def layer2_threshold_deltas_calculus(self):
+        layer2_threshold = list()
+        for i in range(0,self.n[self.total_layers-2]):
+            delta = int()
+            delta = self.__layer2_sigma(i)
+            layer2_threshold.append(delta)
+        self.threshold_deltas.append(layer2_threshold)
+
+    def layer3_threshold_deltas_calculus(self):
+        layer3_threshold = list()
+        for i in range(0,self.n[self.total_layers-1]):
+            delta = int()
+            delta = self.__layer3_sigma(i)
+            layer3_threshold.append(delta)
+        self.threshold_deltas.append(layer3_threshold)
+        
+    def adjust_thresholds():
+        for i in range(1,self.total_layers-1):
+            for j in range(0,self.n[i]):
+                self.u[i][j] = self.u[i][j] - self.learning_rate * self.threshold_deltas[i][j]
+
+    def thresholds_adjustment(self):
+        self.threshold_deltas = list()
+        self.layer1_threshold_deltas_calculus()
+        self.layer2_threshold_deltas_calculus()
+        self.layer3_threshold_deltas_calculus()
+        self.adjust_thresholds()
+
     def train(self,number_of_iterations):
         for x in range(0,number_of_iterations):
             for i in range(0,len(self.outputs)):
@@ -126,11 +168,11 @@ class NeuralNetwork():
 
                 self.think()
                 self.weights_adjustment()
-                # self.threshold_adjustment()
+                self.thresholds_adjustment()
 
 if __name__ == "__main__":
 
-    inputs = [[0,0,0]]
+    inputs = [[0,0,0],[0,0,1],[0,1,0],[0,1,1],[1,0,0],[1,0,1],[1,1,0],[1,1,1]]
     layer1 = NeuralLayer(4,3)
     layer2 = NeuralLayer(4,4)
     layer3 = NeuralLayer(1,4)
