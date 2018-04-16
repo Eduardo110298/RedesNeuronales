@@ -13,7 +13,7 @@ class NeuralLayer():
         self.n = number_of_neurons
         
         self.u = list()
-        self.u = random(number_of_neurons) # Comment this line on tests.
+        self.u = random.random(number_of_neurons) # Comment this line on tests.
         # self.u = [1]*number_of_neurons # Uncomment this line on tests (All thresholds are 1).
 
 class NeuralNetwork():
@@ -29,7 +29,7 @@ class NeuralNetwork():
         self.u += [layer.u for layer in layers]
 
         self.n = list()
-        self.n.append(len(input[0]))
+        self.n.append(len(inputs[0]))
         self.n += [layer.n for layer in layers]
 
         self.total_layers = len(layers) + 1
@@ -40,7 +40,7 @@ class NeuralNetwork():
         return 1 / (1 + exp(-x))
 
     def think(self):
-        for k in range(1,self.total_layers-1):
+        for k in range(1,self.total_layers):
             a = list()
             for i in range(0,self.n[k]):
                 x = int()
@@ -50,13 +50,16 @@ class NeuralNetwork():
                 a.append(self.__sigmoid(x))
             self.a.append(a)
 
-    def __sigmoid_derivative(x):
-        return x (1 - x)
+    def __sigmoid_derivative(self,x):
+        return x * (1 - x)
 
-    def __error_derivative(expected,given):
+    def __error_derivative(self,expected,given):
         return - (expected - given)
 
     def __layer3_sigma(self,i):
+        # print("a:",self.a)
+        # print("total_layers:",self.total_layers)
+        # print("output:",self.output)
         return self.__sigmoid_derivative(self.a[self.total_layers-1][i]) * self.__error_derivative(self.output[i],self.a[self.total_layers-1][i])
 
     def __layer2_sigma(self,k):
@@ -110,6 +113,8 @@ class NeuralNetwork():
         self.weight_deltas.append(layer3_delta)
 
     def adjust_weights(self):
+        print("w:",self.w)
+        print("weight_deltas:",self.weight_deltas)
         for k in range(0,self.total_layers-1):
             for i in range(0,self.n[k+1]):
                 for j in range(0,self.n[k]):
@@ -148,7 +153,7 @@ class NeuralNetwork():
         self.threshold_deltas.append(layer3_threshold)
         
     def adjust_thresholds():
-        for i in range(1,self.total_layers-1):
+        for i in range(1,self.total_layers):
             for j in range(0,self.n[i]):
                 self.u[i][j] = self.u[i][j] - self.learning_rate * self.threshold_deltas[i][j]
 
@@ -163,7 +168,7 @@ class NeuralNetwork():
         for x in range(0,number_of_iterations):
             for i in range(0,len(self.outputs)):
                 self.a = list()
-                self.a.append(inputs[i])
+                self.a.append(self.inputs[i])
                 self.output = self.outputs[i]
 
                 self.think()
@@ -172,15 +177,19 @@ class NeuralNetwork():
 
 if __name__ == "__main__":
 
-    inputs = [[0,0,0],[0,0,1],[0,1,0],[0,1,1],[1,0,0],[1,0,1],[1,1,0],[1,1,1]]
+    train_inputs = [[0,0,0],[0,1,0],[1,0,0],[1,1,0]]
+    test_inputs = [[0,0,1],[0,1,1],[1,0,1],[1,1,1]]
     layer1 = NeuralLayer(4,3)
     layer2 = NeuralLayer(4,4)
     layer3 = NeuralLayer(1,4)
-    outputs = [0]
+    train_outputs = [[0],[1],[1],[1]]
+    test_outputs = [[1],[1],[1],[1]]
+
     learning_rate = 0.001
 
-    neuralNetwork = NeuralNetwork(inputs,[layer1,layer2,layer3],outputs,learning_rate)
+    neuralNetwork = NeuralNetwork(train_inputs,[layer1,layer2,layer3],train_outputs,learning_rate)
     neuralNetwork.train(60000)
+    print("Ready")
     
     # Uncomment this lines only during tests:
     # layer1 = NeuralLayer(3,2)
