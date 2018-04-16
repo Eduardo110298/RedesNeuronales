@@ -15,6 +15,10 @@ class NeuralLayer():
         self.u = list()
         self.u = random.random(number_of_neurons) # Comment this line on tests.
         # self.u = [1]*number_of_neurons # Uncomment this line on tests (All thresholds are 1).
+        
+        # print("w",self.w)
+        # print("n",self.n)
+        # print("u",self.u)
 
 class NeuralNetwork():
     def __init__(self,inputs,layers,outputs,learning_rate):
@@ -86,7 +90,7 @@ class NeuralNetwork():
                 deltas.append(delta)
             layer1_delta.append(deltas)
 
-        self.weight_deltas.append(layer1_delta)
+        self.weight_deltas.append(array(layer1_delta))
 
     def layer2_weight_deltas_calculus(self):
         layer2_delta = list()
@@ -98,7 +102,7 @@ class NeuralNetwork():
                 deltas.append(delta)
             layer2_delta.append(deltas)
 
-        self.weight_deltas.append(layer2_delta)
+        self.weight_deltas.append(array(layer2_delta))
 
     def layer3_weight_deltas_calculus(self):
         layer3_delta = list()
@@ -110,11 +114,11 @@ class NeuralNetwork():
                 deltas.append(delta)
             layer3_delta.append(deltas)
 
-        self.weight_deltas.append(layer3_delta)
+        self.weight_deltas.append(array(layer3_delta))
 
     def adjust_weights(self):
-        print("w:",self.w)
-        print("weight_deltas:",self.weight_deltas)
+        # print("w:",self.w)
+        # print("weight_deltas:",self.weight_deltas)
         for k in range(0,self.total_layers-1):
             for i in range(0,self.n[k+1]):
                 for j in range(0,self.n[k]):
@@ -152,13 +156,18 @@ class NeuralNetwork():
             layer3_threshold.append(delta)
         self.threshold_deltas.append(layer3_threshold)
         
-    def adjust_thresholds():
+    def adjust_thresholds(self):
+        # print("u:",self.u)
+        # print("threshold_deltas:",self.threshold_deltas)
         for i in range(1,self.total_layers):
             for j in range(0,self.n[i]):
+                # print("position: (",i,j,")")
                 self.u[i][j] = self.u[i][j] - self.learning_rate * self.threshold_deltas[i][j]
 
     def thresholds_adjustment(self):
         self.threshold_deltas = list()
+        self.layer0_threshold_deltas = [None]*self.n[0]
+        self.threshold_deltas.append(self.layer0_threshold_deltas)
         self.layer1_threshold_deltas_calculus()
         self.layer2_threshold_deltas_calculus()
         self.layer3_threshold_deltas_calculus()
@@ -188,7 +197,7 @@ if __name__ == "__main__":
     learning_rate = 0.001
 
     neuralNetwork = NeuralNetwork(train_inputs,[layer1,layer2,layer3],train_outputs,learning_rate)
-    neuralNetwork.train(60000)
+    neuralNetwork.train(1)
     print("Ready")
     
     # Uncomment this lines only during tests:
