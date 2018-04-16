@@ -54,6 +54,13 @@ class NeuralNetwork():
                 a.append(self.__sigmoid(x))
             self.a.append(a)
 
+    def predict(self,input,output):
+        self.input = input
+        self.a = list()
+        self.a.append(self.input)
+        self.think()
+        print(self.a[self.total_layers-1])
+
     def __sigmoid_derivative(self,x):
         return x * (1 - x)
 
@@ -194,11 +201,12 @@ if __name__ == "__main__":
     train_outputs = [[0],[1],[1],[1]]
     test_outputs = [[1],[1],[1],[1]]
 
-    learning_rate = 0.001
+    learning_rate = 0.01
 
     neuralNetwork = NeuralNetwork(train_inputs,[layer1,layer2,layer3],train_outputs,learning_rate)
-    neuralNetwork.train(1)
+    neuralNetwork.train(70000)
     print("Ready")
+    neuralNetwork.predict([0,0,1],[1])
     
     # Uncomment this lines only during tests:
     # layer1 = NeuralLayer(3,2)
