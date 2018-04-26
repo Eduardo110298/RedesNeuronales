@@ -67,25 +67,25 @@ class NeuralNetwork():
     def __error_derivative(self,expected,given):
         return - (expected - given)
 
-    def __layer3_sigma(self,i):
-        # print("a:",self.a)
-        # print("total_layers:",self.total_layers)
-        # print("output:",self.output)
-        return self.__sigmoid_derivative(self.a[self.total_layers-1][i]) * self.__error_derivative(self.output[i],self.a[self.total_layers-1][i])
+    # def __layer3_sigma(self,i):
+    #     # print("a:",self.a)
+    #     # print("total_layers:",self.total_layers)
+    #     # print("output:",self.output)
+    #     return self.__sigmoid_derivative(self.a[self.total_layers-1][i]) * self.__error_derivative(self.output[i],self.a[self.total_layers-1][i])
 
-    def __layer2_sigma(self,k):
-        layer2_ways_sum = int()
-        for i in range(0,self.n[self.total_layers-1]):
-            layer2_ways_sum += self.w[self.total_layers-2][i,k] * self.__layer3_sigma(i)
+    # def __layer2_sigma(self,k):
+    #     layer2_ways_sum = int()
+    #     for i in range(0,self.n[self.total_layers-1]):
+    #         layer2_ways_sum += self.w[self.total_layers-2][i,k] * self.__layer3_sigma(i)
 
-        return self.__sigmoid_derivative(self.a[self.total_layers-2][k]) * layer2_ways_sum
+    #     return self.__sigmoid_derivative(self.a[self.total_layers-2][k]) * layer2_ways_sum
 
-    def __layer1_sigma(self,k):
-        layer1_ways_sum = int()
-        for p in range(0,self.n[self.total_layers-2]):
-            layer1_ways_sum += self.w[self.total_layers-3][p,k] * self.__layer2_sigma(p)
+    # def __layer1_sigma(self,k):
+    #     layer1_ways_sum = int()
+    #     for p in range(0,self.n[self.total_layers-2]):
+    #         layer1_ways_sum += self.w[self.total_layers-3][p,k] * self.__layer2_sigma(p)
 
-        return self.__sigmoid_derivative(self.a[self.total_layers-3][k]) * layer1_ways_sum
+    #     return self.__sigmoid_derivative(self.a[self.total_layers-3][k]) * layer1_ways_sum
 
     def layer1_weight_deltas_calculus(self):
         layer1_delta = list()
