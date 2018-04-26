@@ -3,6 +3,7 @@
 
 from random import random
 from math import exp
+import pdb
 
 class NeuralNetwork():
     def __init__(self, layers_sizes, learning_rate):
@@ -15,6 +16,17 @@ class NeuralNetwork():
         self.n_layers = len(layers_sizes) + 2 # + 2 for input and output layers.
         self.layers_sizes = layers_sizes
         self.learning_rate = learning_rate
+
+    def __test(self,i,j,k = 0):
+        """
+        For debug the lists comprehensions
+        """
+        print('u ',self.u,'\n')
+        print('threshold_deltas ',self.threshold_deltas,'\n')
+        print('k ',k)
+        print('i ',i)
+        print('j ',j,'\n')
+        return self.u[i][j] - self.learning_rate * self.threshold_deltas[i][j]
 
     def __sigmoid(self, x):
         return 1 / (1 + exp(-x))
@@ -35,8 +47,8 @@ class NeuralNetwork():
         self.threshold_deltas += [[self.__layer_sigma(layer,i) for i in range(self.layers_sizes[layer])] for layer in range(1,self.n_layers)]
 
     def __adjust_thresholds(self):
-        self.u = [[None]*self.layers_sizes[0]]
-        self.u += [[self.u[i][j] - self.threshold_deltas[i][j] for j in range(self.layers_sizes[i])] for i in range(1,self.n_layers)]
+        self.u = [[None]*self.layers_sizes[0]] + [[self.u[i][j] - self.learning_rate * self.threshold_deltas[i][j] for j in range(self.layers_sizes[i])] for i in range(1,self.n_layers)]
+        # self.u += [[self.test(i,j) for j in range(self.layers_sizes[i])] for i in range(1,self.n_layers)]
 
     def __thresholds_adjustment(self):
         self.threshold_deltas = [[None]*self.layers_sizes[0]] # Fill the first row of threshold with None (The input thresholds).
@@ -55,12 +67,14 @@ class NeuralNetwork():
         self.__adjust_weights()
 
     def __think(self):
-        self.a = list([self.input]) # Initialize the output array (a), with the input array (input) in first position.
-        self.a += [[self.__sigmoid(self.u[k][i] + sum([self.w[k - 1][i][j] * self.a[k - 1][j] for j in range(self.layers_sizes[k - 1])])) for i in range(self.layers_sizes[k])] for k in range(1,self.n_layers)]
+        self.a = [self.input] # Initialize the output array (a), with the input array (input) in first position.
+        for k in range(1,self.n_layers):
+            self.a.append([self.__sigmoid(self.u[k][i] + sum([self.w[k - 1][i][j] * self.a[k - 1][j] for j in range(self.layers_sizes[k - 1])])) for i in range(self.layers_sizes[k])])
+        # self.a += [[self.__sigmoid(self.u[k][i] + sum([self.test(k,i,j) for j in range(self.layers_sizes[k - 1])])) for i in range(self.layers_sizes[k])] for k in range(1,self.n_layers)]
 
     def __generate_random_weigths(self):
         self.w = [[[random() for j in range(self.layers_sizes[k])] for i in range(self.layers_sizes[k + 1])] for k in range(self.n_layers - 1)]
-        self.u = [None]*self.layers_sizes[0]
+        self.u = [[None]*self.layers_sizes[0]]
         self.u += [[random() for j in range(self.layers_sizes[i])] for i in range(1, self.n_layers)]
 
     def train(self, inputs, outputs, times):
@@ -90,14 +104,14 @@ if __name__ == "__main__":
 
     
     neuralNet = NeuralNetwork(
-        layers_sizes = [4,4],
-        learning_rate = 0.01
+        layers_sizes = [4,4,4],
+        learning_rate = 0.001
         )
 
     neuralNet.train(
         train_inputs,
         train_outputs,
-        times = 1000
+        times = 10000
         )
     print("Ready")
-    # neuralNetwork.predict([0,0,1],[1])
+    neuralNet.predict([0,0,0],[0])
