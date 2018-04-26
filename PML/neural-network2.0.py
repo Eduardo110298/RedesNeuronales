@@ -25,16 +25,15 @@ class NeuralNetwork():
         else
             return self.__sigmoid_derivative(self.a[layer][i]) * sum([self.w[layer][p][i] * self.__layer_sigma(layer + 1, p) for p in range(0,self.layers_sizes[layer + 1])])
 
-    def __layer_weight_deltas_calculus(self,layer):
-
+    def __layer_weight_deltas_calculus(self):
+        self.weight_deltas = [[[self.a[layer - 1][j] * self.__layer_sigma(layer,i) for j in range(self.layers_sizes[layer - 1])] for i in range(self.layers_sizes[layer])] for layer in range(1,self.n_layers)]
     
     def __adjust_weights(self):
         self.w = [[[self.w[k][i][j] - self.learning_rate * self.weight_deltas[k][i][j] for j in range(self.layers_sizes[k])] for i in range(self.layers_sizes[k+1])] for k in range(self.n_layers - 1)]
 
     def __weights_adjustment(self):
         self.weight_deltas = []
-        self.__layer_weight_deltas_calculus(0)
-
+        self.__layer_weight_deltas_calculus()
         self.__adjust_weights()
 
     def __think(self):
