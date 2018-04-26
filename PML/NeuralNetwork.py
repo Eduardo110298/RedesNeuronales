@@ -3,13 +3,13 @@
 
 from random import random
 from math import exp
-import pdb
 
 class NeuralNetwork():
+
     def __init__(self, layers_sizes, learning_rate):
         """
-        layer_sizes: List of number of neurons in each hidden layer.
-        len(layer_sizes) indicate how many hidden layers are in the network.
+        layers_sizes: List of number of neurons in each hidden layer.
+        len(layers_sizes) indicate how many hidden layers are in the network.
         
         learning_rate: the learning rate.
         """
@@ -78,7 +78,8 @@ class NeuralNetwork():
         self.u += [[random() for j in range(self.layers_sizes[i])] for i in range(1, self.n_layers)]
 
     def train(self, inputs, outputs, times):
-        self.layers_sizes = [len(inputs[0])] + self.layers_sizes + [len(outputs[0])]
+        if (self.n_layers != len(self.layers_sizes)):
+            self.layers_sizes = [len(inputs[0])] + self.layers_sizes + [len(outputs[0])]
         self.__generate_random_weigths()
         train_cases = len(inputs) # Should be len(outputs).
         for x in range(times):
@@ -91,6 +92,9 @@ class NeuralNetwork():
 
     def predict(self,input,output):
         self.input = input
+        if (self.n_layers != len(self.layers_sizes)):
+            self.layers_sizes = [len(input)] + self.layers_sizes + [len(output)]
+            self.__generate_random_weigths()
         self.__think()
         print("Expected: ", output)
         print("Given: ", self.a[self.n_layers-1])
@@ -111,7 +115,7 @@ if __name__ == "__main__":
     neuralNet.train(
         train_inputs,
         train_outputs,
-        times = 10000
+        times = 1000
         )
     print("Ready")
-    neuralNet.predict([0,0,0],[0])
+    neuralNet.predict([0,1,0],[1])
