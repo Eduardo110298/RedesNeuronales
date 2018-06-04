@@ -17,6 +17,11 @@ class NeuralNetwork():
         self.layers_sizes = layers_sizes
         self.learning_rate = learning_rate
 
+    def test(self,k,i):
+        x = self.u[k][i] + sum([self.w[k - 1][i][j] * self.a[k - 1][j] for j in range(self.layers_sizes[k - 1])])
+        print(x)
+        return x
+
     def __sigmoid(self, x):
         return 1 / (1 + exp(-x))
     
@@ -65,7 +70,7 @@ class NeuralNetwork():
         """
         self.a = [self.input] # Initialize the output array (a), with the input array (input) in first position.
         for k in range(1,self.n_layers):
-            self.a.append([self.__sigmoid(self.u[k][i] + sum([self.w[k - 1][i][j] * self.a[k - 1][j] for j in range(self.layers_sizes[k - 1])])) for i in range(self.layers_sizes[k])])
+            self.a.append([self.__sigmoid(self.test(k,i)) for i in range(self.layers_sizes[k])])
 
     def __generate_random_weights(self):
         """
@@ -116,7 +121,7 @@ class NeuralNetwork():
                 self.output = outputs[i]
                 self.__think()
                 self.__weights_adjustment()
-                self.__thresholds_adjustment()
+                self.__thresholds_adjustment().
 
     def predict(self,input,output):
         """
@@ -132,21 +137,11 @@ class NeuralNetwork():
         print("Expected: ", output)
         print("Given: ", self.a[self.n_layers-1])
 
-    def accuracy(self,inputs,outputs):
-        """
-        Predict the output for a set of study cases.
-        inputs: list with study cases.
-        outputs: list with the output of each study case.
-        """
-        pass
 
 if __name__ == "__main__":
 
-    train_inputs = [[0,0,0,0],[0,0,0,1],[0,0,1,1],[0,1,0,0],[0,1,1,1],[1,0,0,0],[1,0,1,0],[1,1,0,1]]
-    #train_inputs = [[0,0,0,0],[0,1,1,0],[1,0,1,0],[1,1,0,0],[1,1,1,0]]
-    test_inputs = [[0,0,1],[0,1,1],[1,0,1],[1,1,1]]
+    train_inputs = [[20,20,20,0],[0,0,20,1],[0,0,1,1],[999,999,999,0],[0,1,1,1],[1,0,0,0],[1,0,1,0],[1,1,0,1]]
     train_outputs = [[0],[1],[1],[1],[0],[1],[0],[0]]
-    test_outputs = [[1],[1],[1],[1]]
 
     neuralNet = NeuralNetwork(
         layers_sizes = [3,3],
